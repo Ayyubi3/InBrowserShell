@@ -12,6 +12,8 @@
 
 body {
   background-color: #2d2b55;
+
+  word-wrap: break-word;
 }
 
 /* Command Input Field */
@@ -76,4 +78,19 @@ body {
   position: absolute;
   top: 40px;
   right: 39px;
+}
+
+@media only screen and (max-width: 600px) {
+  .wrapper {
+    top: 100px;
+  }
+  .con {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .move {
+    animation: 0;
+  }
 }

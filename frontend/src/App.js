@@ -4,64 +4,64 @@ import CommandList from "./CommandList";
 import "./App.css";
 import PlayBtn from "./Icons/PlayBtn.svg";
 
-import io from "socket.io-client"
+import io from "socket.io-client";
 const socket = io.connect("http://192.168.2.169:3001", {
-  transports: ["websocket"]
-})
+  transports: ["websocket"],
+  upgrade: false,
+});
 
 function App() {
-
   //Webscocket init
-  const [connected, setConnected] = useState("not Connected")
+  const [connected, setConnected] = useState("not Connected");
 
-  socket.on('connect', function () {
-    console.log('Connected to server');
-    setConnected("Connected")
+  socket.on("connect", function () {
+    console.log("Connected to server");
+    setConnected("Connected");
   });
 
-  socket.on('disconnect', function () {
-    console.log('Disconnected');
-    setConnected("Disconnected")
+  socket.on("disconnect", function () {
+    console.log("Disconnected");
+    socket.removeAllListeners();
+    setConnected("Disconnected");
   });
 
+  socket.on("output", function (out) {
+    console.log(out);
+    setCommands((prev) => {
+      return [...prev, {
+        command: out,
+        date: new Date(),
+      }];
+    });
 
+  });
 
   const commandInputRef = useRef();
+
   const [commands, setCommands] = useState([]);
 
-
-  function onAddCommand(e) {
-
-    if (commandInputRef.current.value == "") return
+  const onAddCommand = (e) => {
+    if (commandInputRef.current.value === "") return;
 
     const obj = {
-
       command: commandInputRef.current.value,
-      date: new Date()
-
-    }
+      date: new Date(),
+    };
 
     setCommands((prev) => {
       return [...prev, obj];
     });
 
-    socket.emit("cmd", JSON.stringify(obj))
+    socket.emit("cmd", JSON.stringify(obj));
 
+    commandInputRef.current.value = "";
 
-    commandInputRef.current.value = ""
-
-    onAddClass("wrapper", "move");
-  }
-
-  function onAddClass(idOfElement, classN) {
-    console.log("addClass function fired");
-
-    document.getElementById(idOfElement).classList.add(classN);
-  }
+    document.getElementById("wrapper").classList.add("move");
+  };
 
   return (
     <>
-      <div className="wrapper first second" id="wrapper">
+      <div className="wrapper" id="wrapper">
         <input
           autoComplete="off"
           placeholder="Enter Command..."
