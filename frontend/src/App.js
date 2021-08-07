@@ -26,7 +26,6 @@ function App() {
   });
 
   socket.on("output", function (out) {
-    console.log(out);
     setCommands((prev) => {
       return [...prev, {
         command: out,
@@ -36,9 +35,15 @@ function App() {
 
   });
 
+
+
+
   const commandInputRef = useRef();
 
   const [commands, setCommands] = useState([]);
+
+
+
 
   const onAddCommand = (e) => {
     if (commandInputRef.current.value === "") return;
